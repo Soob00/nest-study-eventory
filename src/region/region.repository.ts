@@ -7,6 +7,7 @@ export class RegionRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async findAllRegions(): Promise<RegionData[]> {
+    // prisma에서 뭔갈 가져오는 구문
     return this.prisma.region.findMany({
       select: {
         id: true,
@@ -15,3 +16,6 @@ export class RegionRepository {
     });
   }
 }
+
+// DB와 상호작용하는 로직 담당.
+// 여기에 거의 모든 내용을 포함하기 때문에 STACK을 바꿔도 SERVICE 건들일 필요가 없어짐.
