@@ -12,6 +12,7 @@ export class RegionController {
   @ApiOperation({ summary: '모든 특별시/광역시/도 리스트' })
   @ApiOkResponse({ type: RegionListDto })
   async findAllRegions(): Promise<RegionListDto> {
+    // 나중에 promise 따로 찾아보세요
     return this.regionService.findAllRegions();
   }
 }
