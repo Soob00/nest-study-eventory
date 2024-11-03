@@ -88,7 +88,10 @@ export class EventRepository {
 
   // event 참가
 
-  async joinEvent(userId: number, payload: CreateEventJoinPayload): Promise<void> {
+  async joinEvent(
+    userId: number,
+    payload: CreateEventJoinPayload,
+  ): Promise<void> {
     await this.prisma.eventJoin.create({
       data: {
         userId: userId,
@@ -101,13 +104,12 @@ export class EventRepository {
     });
   }
 
-
   async getEvents(query: EventQuery): Promise<EventData[]> {
     return await this.prisma.event.findMany({
       where: {
         hostId: query.hostId,
         cityId: query.cityId,
-        categoryId: query.categoryId,  
+        categoryId: query.categoryId,
       },
       select: {
         id: true,
@@ -118,11 +120,10 @@ export class EventRepository {
         cityId: true,
         startTime: true,
         endTime: true,
-        maxPeople: true, 
+        maxPeople: true,
       },
     });
   }
-
 
   async leaveEvent(
     userId: number,
@@ -136,7 +137,6 @@ export class EventRepository {
         },
       },
     });
-
   }
 
   async getEndTime(eventId: number): Promise<Date> {
@@ -145,11 +145,9 @@ export class EventRepository {
     return event.endTime;
   }
 
-
   async getStartTime(eventId: number): Promise<Date> {
     const event = await this.findEventById(eventId);
 
     return event.startTime;
   }
-  
 }
