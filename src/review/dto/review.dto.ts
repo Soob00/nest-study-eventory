@@ -1,6 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { ReviewData } from '../type/review-data.type';
 
+
+// reviewdto를 불러내면, 다음의 것을 보내줌. 
 export class ReviewDto {
   @ApiProperty({
     description: '리뷰 ID',
@@ -55,6 +57,8 @@ export class ReviewDto {
   }
 }
 
+// reviewlistdto를 불러내면, 다음의 것들을 제출해줌. 
+// 전체 목록을 보내줌.
 export class ReviewListDto {
   @ApiProperty({
     description: '리뷰 목록',
