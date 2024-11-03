@@ -10,6 +10,7 @@ import { CreateReviewPayload } from 'src/review/payload/create-review.payload';
 import { CreateEventPayload } from './payload/create-event.payload';
 import { CreateEventJoinPayload } from './payload/create-event-join.payload';
 import { EventQuery } from './query/event-query';
+import { EventData } from './type/event-data.type';
 
 @Controller('events')
 @ApiTags('Event API')
@@ -53,7 +54,7 @@ export class EventController {
   }
 
   // 유저가 모임에서 나가는 API
-  @Post(':eventid/leave')
+  @Post(':eventid/out')
   @ApiOperation({ summary: '이벤트 나가기' })
   @ApiNoContentResponse()
   async leaveEvent(

@@ -61,7 +61,7 @@ export class EventRepository {
   }
 
   // 특정 event 찾기
-  async findEventById(id: number): Promise<void> {
+  async findEventById(id: number): Promise<EventData> {
     const event = await this.prisma.event.findUnique({
       where: {
         id: id,
@@ -82,22 +82,43 @@ export class EventRepository {
     if (!event) {
       throw new Error(`Event with id ${id} not found`);
     }
+
+    return event;
   }
 
   // event 참가
-  async joinEvent(userId: number, payload: CreateEventJoinPayload): Promise<EventData> {
+  async joinEvent(userId: number, payload: CreateEventJoinPayload): Promise<void> {
     await this.prisma.eventJoin.create({
       data: {
         userId: userId,
         eventId: payload.eventId,
       },
+      select: {
+        userId: true,
+        eventId: true,
+      },
     });
-
-    return this.findEventById(payload.eventId);
   }
 
   async getEvents(query: EventQuery): Promise<EventData[]> {
-    
+    return await this.prisma.event.findMany({
+      where: {
+        hostId: query.hostId,
+        cityId: query.cityId,
+        categoryId: query.categoryId,  
+      },
+      select: {
+        id: true,
+        hostId: true,
+        title: true,
+        description: true,
+        categoryId: true,
+        cityId: true,
+        startTime: true,
+        endTime: true,
+        maxPeople: true, 
+      },
+    });
   }
 
   async leaveEvent(userId: number, payload: CreateEventJoinPayload): Promise<void> {
@@ -109,12 +130,19 @@ export class EventRepository {
         },
       },
     });
+
   }
 
   async getEndTime(eventId: number): Promise<Date> {
     const event = await this.findEventById(eventId);
 
     return event.endTime;
+  }
+
+  async getStartTime(eventId: number): Promise<Date> {
+    const event = await this.findEventById(eventId);
+
+    return event.startTime;
   }
   
 

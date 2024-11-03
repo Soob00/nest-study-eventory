@@ -65,11 +65,8 @@ export class EventService {
     return EventDto.from(event);
 
     }
-  
 
-
-
-  // 특정 하나의 event get 위한 것
+  // 특정 event get 위한 것
   async findEventById(id: number): Promise<EventDto> {
     const event = await this.eventRepository.findEventById(id);
 
@@ -80,12 +77,6 @@ export class EventService {
     return EventDto.from(event);
   }
 
-  // 모든 event get 위한 것
-  async findAllEvents(): Promise<EventListDto[]> {
-    const events = await this.eventRepository.findAllEvents();
-
-    return events.map((event) => EventListDto.from(events));
-  }
 
   // POST(join)을 위한 것.
   async joinEvent(eventId: number, userId: number): Promise<void> {
@@ -102,6 +93,12 @@ export class EventService {
 
     if (endTime < new Date()) {
       throw new ConflictException('이벤트가 종료되었습니다.');
+    }
+
+    const startTime = await this.eventRepository.getStartTime(eventId);
+    
+    if ( new Date() > startTime){
+      throw new ConflictException('이벤트가 시작되었습니다.');
     }
 
     const event = await this.eventRepository.findEventById(eventId);
@@ -149,5 +146,6 @@ export class EventService {
 function generateUniqueId(): number {
   throw new Error('Function not implemented.');
 }
+
 // 끝. 제일 간단하게. sudo code 느낌으로.
 
