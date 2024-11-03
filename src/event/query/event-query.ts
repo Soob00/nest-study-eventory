@@ -28,6 +28,5 @@ export class EventQuery {
     description: 'category ID',
     type: Number,
   })
-  
   categoryId?: number;
 }

@@ -3,7 +3,12 @@
 // 생성, 조회, 삭제 등등의 API
 
 import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
-import { ApiNoContentResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiNoContentResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 import { EventService } from './event.service';
 import { EventDto, EventListDto } from './dto/event.dto';
 import { CreateReviewPayload } from 'src/review/payload/create-review.payload';
@@ -71,5 +76,4 @@ export class EventController {
   async getEndTime(@Param('eventId') eventId: number): Promise<Date> {
     return this.eventService.getEndTime(eventId);
   }
-  
 }

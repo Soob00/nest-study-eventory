@@ -4,13 +4,12 @@ import { EventData } from '../type/event-data.type';
 // 요청에 필요한 것 제공
 
 export class EventDto {
-
   @ApiProperty({
     description: '호스트 ID',
     type: Number,
   })
   hostId!: number;
-  
+
   @ApiProperty({
     description: 'title',
     type: String,

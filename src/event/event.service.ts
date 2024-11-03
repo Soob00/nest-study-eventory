@@ -1,8 +1,8 @@
-import { 
+import {
   Injectable,
   ConflictException,
   NotFoundException,
- } from '@nestjs/common';
+} from '@nestjs/common';
 import { EventRepository } from './event.repository';
 import { EventListDto } from './dto/event.dto';
 import { EventData } from './type/event-data.type';
@@ -25,16 +25,16 @@ export class EventService {
   // POST(create)를 위한 것.
   // 조건 - 호스트: 자동 참가, 시작시간<종료시간, 최소 1명 이상의 인원, 중복된 이벤트 제목 불가, 시작전,진행중,종료의 상태만 가짐.
   async createEvent(payload: CreateEventPayload): Promise<EventDto> {
-    const isEventExist = await this.eventRepository.isEventExist(
-      payload.title,
-    );
+    const isEventExist = await this.eventRepository.isEventExist(payload.title);
 
     if (isEventExist) {
       throw new ConflictException('이미 존재하는 이벤트입니다.');
     }
 
     if (payload.startTime > payload.endTime) {
-      throw new ConflictException('시작 시간이 종료 시간보다 늦을 수 없습니다.');
+      throw new ConflictException(
+        '시작 시간이 종료 시간보다 늦을 수 없습니다.',
+      );
     }
 
     if (payload.maxPeople < 1) {
@@ -55,19 +55,15 @@ export class EventService {
       eventJoin: {
         create: {
           userId: payload.hostId,
-          name: ''
-        }
-      }
+          name: '',
+        },
+      },
     };
 
     const event = await this.eventRepository.createEvent(createData);
 
     return EventDto.from(event);
-
-    }
-  
-
-
+  }
 
   // 특정 하나의 event get 위한 것
   async findEventById(id: number): Promise<EventDto> {
@@ -111,7 +107,7 @@ export class EventService {
     if (maxPeople <= joinedPeople) {
       throw new ConflictException('인원이 가득 찼습니다.');
     }
-    
+
     const joinPayload: CreateEventJoinPayload = { eventId, userId };
     await this.eventRepository.joinEvent(userId, joinPayload);
   }
@@ -138,16 +134,12 @@ export class EventService {
       throw new ConflictException('이벤트가 종료되었습니다.');
     }
 
-
     const leavePayload: CreateEventJoinPayload = { eventId, userId };
     await this.eventRepository.leaveEvent(userId, leavePayload);
   }
-  
 }
-
 
 function generateUniqueId(): number {
   throw new Error('Function not implemented.');
 }
 // 끝. 제일 간단하게. sudo code 느낌으로.
-
