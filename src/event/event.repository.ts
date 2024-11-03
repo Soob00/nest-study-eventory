@@ -35,8 +35,8 @@ export class EventRepository {
         },
       },
     });
-  };
-  
+  }
+
   async isEventExist(title: string): Promise<boolean> {
     const event = await this.prisma.event.findFirst({
       where: {
@@ -87,6 +87,7 @@ export class EventRepository {
   }
 
   // event 참가
+
   async joinEvent(userId: number, payload: CreateEventJoinPayload): Promise<void> {
     await this.prisma.eventJoin.create({
       data: {
@@ -99,6 +100,7 @@ export class EventRepository {
       },
     });
   }
+
 
   async getEvents(query: EventQuery): Promise<EventData[]> {
     return await this.prisma.event.findMany({
@@ -121,7 +123,11 @@ export class EventRepository {
     });
   }
 
-  async leaveEvent(userId: number, payload: CreateEventJoinPayload): Promise<void> {
+
+  async leaveEvent(
+    userId: number,
+    payload: CreateEventJoinPayload,
+  ): Promise<void> {
     await this.prisma.eventJoin.delete({
       where: {
         eventId_userId: {
@@ -139,12 +145,11 @@ export class EventRepository {
     return event.endTime;
   }
 
+
   async getStartTime(eventId: number): Promise<Date> {
     const event = await this.findEventById(eventId);
 
     return event.startTime;
   }
   
-
-    
 }

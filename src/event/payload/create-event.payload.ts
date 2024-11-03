@@ -3,7 +3,6 @@ import { IsDate, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 
 // post하면 보낼 데이터 형식
 export class CreateEventPayload {
-
   @IsInt()
   @ApiProperty({
     description: '호스트 ID',

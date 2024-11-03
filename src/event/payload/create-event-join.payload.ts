@@ -3,19 +3,17 @@ import { IsDate, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 
 // post하면 보낼 데이터 형식
 export class CreateEventJoinPayload {
-    
-    @IsInt()
-    @ApiProperty({
+  @IsInt()
+  @ApiProperty({
     description: '이벤트 ID',
     type: Number,
-    })
-    eventId!: number;
-    
-    @IsInt()
-    @ApiProperty({
+  })
+  eventId!: number;
+
+  @IsInt()
+  @ApiProperty({
     description: '참가자 ID',
     type: Number,
-    })
-    userId!: number;
-    
+  })
+  userId!: number;
 }

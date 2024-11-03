@@ -11,7 +11,14 @@ import { ReviewModule } from '../review/review.module';
 
 @Module({
   // 여기에 있어야 실행 가능.
-  imports: [configModule, RegionModule, EventModule, CategoryModule, CommonModule, ReviewModule],
+  imports: [
+    configModule,
+    RegionModule,
+    EventModule,
+    CategoryModule,
+    CommonModule,
+    ReviewModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
