@@ -76,9 +76,8 @@ export class EventRepository {
   // event 참가
 
   async joinEvent(eventId: number, userId: number): Promise<void> {
-
     await this.prisma.eventJoin.create({
-      data: {userId: userId, eventId: eventId},
+      data: { userId: userId, eventId: eventId },
       select: {
         userId: true,
         eventId: true,
@@ -117,10 +116,7 @@ export class EventRepository {
     });
   }
 
-  async leaveEvent(
-    eventId: number,
-    userId: number,
-  ): Promise<void> {
+  async leaveEvent(eventId: number, userId: number): Promise<void> {
     await this.prisma.eventJoin.delete({
       where: {
         eventId_userId: {

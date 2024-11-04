@@ -23,13 +23,17 @@ export class EventService {
 
   // POST(create)를 위한 것.
   // 조건 - 호스트: 자동 참가, 시작시간<종료시간, 최소 1명 이상의 인원
-    async createEvent(payload: CreateEventPayload): Promise<EventDto> {
-      if (payload.startTime > payload.endTime) {
-      throw new BadRequestException('시작 시간이 종료 시간보다 늦을 수 없습니다.');
+  async createEvent(payload: CreateEventPayload): Promise<EventDto> {
+    if (payload.startTime > payload.endTime) {
+      throw new BadRequestException(
+        '시작 시간이 종료 시간보다 늦을 수 없습니다.',
+      );
     }
 
     if (payload.startTime < new Date()) {
-      throw new BadRequestException('이미 시작 시간이 지나 이벤트를 생성할 수 없습니다.');
+      throw new BadRequestException(
+        '이미 시작 시간이 지나 이벤트를 생성할 수 없습니다.',
+      );
     }
 
     if (payload.hostId === null) {
@@ -38,17 +42,17 @@ export class EventService {
 
     if (payload.title === null) {
       throw new BadRequestException('제목이 필요합니다.');
-    } 
+    }
 
-    if(payload.cityId === null){
+    if (payload.cityId === null) {
       throw new BadRequestException('지역에 대한 정보가 필요합니다.');
     }
 
-    if(payload.categoryId === null){
+    if (payload.categoryId === null) {
       throw new BadRequestException('카테고리 정보가 필요합니다.');
     }
 
-    if(payload.description === null){
+    if (payload.description === null) {
       throw new BadRequestException('설명을 입력해주세요.');
     }
 
@@ -68,7 +72,6 @@ export class EventService {
 
     return EventDto.from(event);
   }
-
 
   // 특정 event get 위한 것
   async findEventById(id: number): Promise<EventDto> {
@@ -93,8 +96,8 @@ export class EventService {
     if (isUserJoinedEvent) {
       throw new ConflictException('이미 참가한 이벤트입니다.');
     }
-    
-    if ( new Date() > event.startTime){
+
+    if (new Date() > event.startTime) {
       throw new ConflictException('이미 이벤트가 시작되어 참여할 수 없습니다.');
     }
 
@@ -119,9 +122,9 @@ export class EventService {
       userId,
       eventId,
     );
-    
+
     const event = await this.eventRepository.findEventById(eventId);
-    
+
     if (userId == event.hostId) {
       throw new ConflictException('이벤트의 호스트는 탈퇴할 수 없습니다.');
     }
@@ -130,15 +133,10 @@ export class EventService {
       throw new ConflictException('이벤트에 참가하지 않았습니다.');
     }
 
-    if ( new Date() > event.startTime){
+    if (new Date() > event.startTime) {
       throw new ConflictException('이벤트가 시작되어 탈퇴할 수 없습니다.');
-
     }
 
-    await this.eventRepository.leaveEvent(eventId, userId );
-
+    await this.eventRepository.leaveEvent(eventId, userId);
   }
-
-
 }
-

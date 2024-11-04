@@ -46,7 +46,7 @@ export class EventDto {
     type: Date,
   })
   endTime!: Date;
-  
+
   @IsPositive()
   @ApiProperty({
     description: '최대 인원',
