@@ -81,13 +81,13 @@ export class EventService {
     if (!user) {
       throw new NotFoundException('존재하지 않는 user입니다.');
     }
-    
-    if ( new Date() > event.startTime){
 
+    if (new Date() > event.startTime) {
       throw new ConflictException('이미 이벤트가 시작되어 참여할 수 없습니다.');
     }
 
-    const countjoinedPeople = await this.eventRepository.CountJoinedPeople(eventId);
+    const countjoinedPeople =
+      await this.eventRepository.CountJoinedPeople(eventId);
 
     if (event.maxPeople === countjoinedPeople) {
       throw new ConflictException('모임인원이 가득 차서 참여할 수 없습니다.');

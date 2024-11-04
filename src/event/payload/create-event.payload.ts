@@ -1,5 +1,13 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsDate, IsInt, IsOptional, IsPositive, IsString, Max, Min } from 'class-validator';
+import {
+  IsDate,
+  IsInt,
+  IsOptional,
+  IsPositive,
+  IsString,
+  Max,
+  Min,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 
 // post하면 보낼 데이터 형식

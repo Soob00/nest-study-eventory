@@ -28,7 +28,7 @@ export class EventRepository {
         endTime: data.endTime,
         maxPeople: data.maxPeople,
         eventJoin: {
-          create:{
+          create: {
             userId: data.hostId,
           },
         },
@@ -55,8 +55,7 @@ export class EventRepository {
         id: userId,
       },
     });
-  };
-
+  }
 
   // 특정 event 찾기
   async findEventById(id: number): Promise<EventData> {
