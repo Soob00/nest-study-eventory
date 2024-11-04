@@ -67,8 +67,7 @@ export class EventService {
     const event = await this.eventRepository.createEvent(createData);
 
     return EventDto.from(event);
-
-    }
+  }
 
 
   // 특정 event get 위한 것
@@ -81,7 +80,6 @@ export class EventService {
 
     return EventDto.from(event);
   }
-
 
   // POST(join)을 위한 것.
   async joinEvent(eventId: number, userId: number): Promise<void> {
@@ -131,9 +129,10 @@ export class EventService {
     if (!isUserJoinedEvent) {
       throw new ConflictException('이벤트에 참가하지 않았습니다.');
     }
-    
+
     if ( new Date() > event.startTime){
       throw new ConflictException('이벤트가 시작되어 탈퇴할 수 없습니다.');
+
     }
 
     await this.eventRepository.leaveEvent(eventId, userId );
