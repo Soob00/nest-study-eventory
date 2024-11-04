@@ -2,13 +2,8 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsDate, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 
 // post하면 보낼 데이터 형식
-export class CreateEventJoinPayload {
-  @IsInt()
-  @ApiProperty({
-    description: '이벤트 ID',
-    type: Number,
-  })
-  eventId!: number;
+// controller에서 사용
+export class EventJoinOutPayload {
 
   @IsInt()
   @ApiProperty({
@@ -16,4 +11,5 @@ export class CreateEventJoinPayload {
     type: Number,
   })
   userId!: number;
+
 }

@@ -2,8 +2,9 @@
 // 주로 경로와 HTTP 메서드 정의
 // 생성, 조회, 삭제 등등의 API
 
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Param, ParseIntPipe, Post, Query } from '@nestjs/common';
 import {
+  ApiCreatedResponse,
   ApiNoContentResponse,
   ApiOkResponse,
   ApiOperation,
@@ -11,9 +12,8 @@ import {
 } from '@nestjs/swagger';
 import { EventService } from './event.service';
 import { EventDto, EventListDto } from './dto/event.dto';
-import { CreateReviewPayload } from 'src/review/payload/create-review.payload';
 import { CreateEventPayload } from './payload/create-event.payload';
-import { CreateEventJoinPayload } from './payload/create-event-join.payload';
+import { EventJoinOutPayload } from './payload/event-join-out.payload';
 import { EventQuery } from './query/event-query';
 import { EventData } from './type/event-data.type';
 
@@ -24,17 +24,23 @@ export class EventController {
 
   // 이벤트 생성
   @Post()
+  @ApiCreatedResponse()
   @ApiOperation({ summary: '이벤트를 생성합니다.' })
   @ApiOkResponse({ type: EventDto })
-  async createEvent(@Body() payload: CreateEventPayload): Promise<EventDto> {
+  async createEvent(
+    @Param('eventId') eventId: number,
+    @Body() payload: CreateEventPayload,
+  ): Promise<EventDto> {
     return this.eventService.createEvent(payload);
   }
 
   // 모임 한 개를 조회
   @Get(':id')
-  @ApiOperation({ summary: '하나의 모임 조회' })
+  @ApiOperation({ summary: '하나의 모임을 조회합니다.' })
   @ApiOkResponse({ type: EventDto })
-  async findEventById(@Param('id') id: number): Promise<EventDto> {
+  async findEventById(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<EventDto> {
     return this.eventService.findEventById(id);
   }
 
@@ -48,33 +54,24 @@ export class EventController {
 
   // 유저가 모임에 참가하는 API
   @Post(':eventid/join')
-  @ApiOperation({ summary: '이벤트 참가' })
+  @ApiOperation({ summary: '유저가 모임에 참가합니다.' })
+  @HttpCode(204)
   @ApiNoContentResponse()
   async joinEvent(
     @Param('eventId') eventId: number,
-    @Body() payload: CreateEventJoinPayload,
+    @Body() payload: EventJoinOutPayload,
   ): Promise<void> {
-    const userId = payload.userId;
-    return this.eventService.joinEvent(eventId, userId);
+    return this.eventService.joinEvent(eventId, payload.userId);
   }
 
   // 유저가 모임에서 나가는 API
   @Post(':eventid/out')
-  @ApiOperation({ summary: '이벤트 나가기' })
+  @ApiOperation({ summary: '유저가 모임에 탈퇴합니다.' })
   @ApiNoContentResponse()
   async leaveEvent(
     @Param('eventId') eventId: number,
-    @Body() payload: CreateEventJoinPayload,
+    @Body() payload: EventJoinOutPayload,
   ): Promise<void> {
-    const userId = payload.userId;
-    const endTime = new Date(); // or assign the appropriate value
-    return this.eventService.leaveEvent(eventId, userId);
-  }
-
-  @Get(':eventId/endTime')
-  @ApiOperation({ summary: '이벤트 종료 시간' })
-  @ApiOkResponse({ type: Date })
-  async getEndTime(@Param('eventId') eventId: number): Promise<Date> {
-    return this.eventService.getEndTime(eventId);
+    return this.eventService.leaveEvent(eventId, payload.userId);
   }
 }
