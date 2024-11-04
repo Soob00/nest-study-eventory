@@ -2,6 +2,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsInt, IsOptional } from 'class-validator';
 import { Type } from 'class-transformer';
 
+// url의 특정 조건 설정 - get해서 검색할 때 주로 사용.
 export class EventQuery {
   @IsOptional()
   @IsInt()

@@ -11,7 +11,7 @@ import { CreateReviewPayload } from 'src/review/payload/create-review.payload';
 import { EventDto } from 'src/event/dto/event.dto';
 import { CreateEventPayload } from './payload/create-event.payload';
 import { EventJoinOutPayload } from './payload/event-join-out.payload';
-import { CreateEventData } from './type/create-event-data';
+import { CreateEventData } from './type/create-event-data.type';
 import { get } from 'lodash';
 import { EventQuery } from './query/event-query';
 import { title } from 'process';
@@ -32,26 +32,6 @@ export class EventService {
       throw new BadRequestException('이미 시작 시간이 지나 이벤트를 생성할 수 없습니다.');
     }
 
-    if (payload.hostId === null) {
-      throw new BadRequestException('호스트가 필요합니다.');
-    }
-
-    if (payload.title === null) {
-      throw new BadRequestException('제목이 필요합니다.');
-    } 
-
-    if(payload.cityId === null){
-      throw new BadRequestException('지역에 대한 정보가 필요합니다.');
-    }
-
-    if(payload.categoryId === null){
-      throw new BadRequestException('카테고리 정보가 필요합니다.');
-    }
-
-    if(payload.description === null){
-      throw new BadRequestException('설명을 입력해주세요.');
-    }
-
     const createData: CreateEventData = {
       hostId: payload.hostId,
       title: payload.title,
@@ -61,7 +41,7 @@ export class EventService {
       startTime: payload.startTime,
       endTime: payload.endTime,
       maxPeople: payload.maxPeople,
-      JoinUser: payload.hostId,
+      EventJoin: payload.hostId,
     };
 
     const event = await this.eventRepository.createEvent(createData);
@@ -93,14 +73,19 @@ export class EventService {
     if (isUserJoinedEvent) {
       throw new ConflictException('이미 참가한 이벤트입니다.');
     }
+
+    const user = await this.eventRepository.getUserById(userId);
+    if (!user) {
+      throw new NotFoundException('User가 존재하지 않습니다.');
+    }
     
     if ( new Date() > event.startTime){
       throw new ConflictException('이미 이벤트가 시작되어 참여할 수 없습니다.');
     }
 
-    const joinedPeople = await this.eventRepository.getJoinedPeople(eventId);
+    const countjoinedPeople = await this.eventRepository.CountJoinedPeople(eventId);
 
-    if (event.maxPeople === joinedPeople) {
+    if (event.maxPeople === countjoinedPeople) {
       throw new ConflictException('모임인원이 가득 차서 참여할 수 없습니다.');
     }
 

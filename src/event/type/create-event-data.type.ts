@@ -9,5 +9,5 @@ export type CreateEventData = {
   startTime: Date;
   endTime: Date;
   maxPeople: number;
-  JoinUser: number;
+  EventJoin: number;
 };

@@ -1,9 +1,10 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsDate, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
+import { IsDate, IsInt, IsOptional, IsPositive, IsString, Max, Min } from 'class-validator';
 import { Type } from 'class-transformer';
 
 // post하면 보낼 데이터 형식
 // controller에서 사용
+
 export class CreateEventPayload {
   @IsInt()
   @ApiProperty({
@@ -56,6 +57,7 @@ export class CreateEventPayload {
   })
   endTime!: Date;
 
+  @IsPositive()
   @IsInt()
   @ApiProperty({
     description: '최대인원',

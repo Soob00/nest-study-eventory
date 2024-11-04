@@ -1,8 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { EventData } from '../type/event-data.type';
-import { IsPositive } from 'class-validator';
 
-// 요청에 필요한 것 제공
+// 클라이언트가 요청할 때 전송하는 것.
 
 export class EventDto {
   @ApiProperty({
@@ -18,7 +17,7 @@ export class EventDto {
   title!: string;
 
   @ApiProperty({
-    description: 'description',
+    description: '모임 설명',
     type: String,
   })
   description!: string;
@@ -47,7 +46,6 @@ export class EventDto {
   })
   endTime!: Date;
   
-  @IsPositive()
   @ApiProperty({
     description: '최대 인원',
     type: Number,
