@@ -45,7 +45,7 @@ export class EventDto {
     type: Date,
   })
   endTime!: Date;
-  
+
   @ApiProperty({
     description: '최대 인원',
     type: Number,
