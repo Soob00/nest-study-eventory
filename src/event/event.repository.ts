@@ -33,6 +33,17 @@ export class EventRepository {
           },
         },
       },
+      select: {
+        id: true,
+        hostId: true,
+        title: true,
+        description: true,
+        categoryId: true,
+        cityId: true,
+        startTime: true,
+        endTime: true,
+        maxPeople: true,
+      },
     });
   }
 

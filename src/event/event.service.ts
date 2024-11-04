@@ -45,7 +45,6 @@ export class EventService {
       startTime: payload.startTime,
       endTime: payload.endTime,
       maxPeople: payload.maxPeople,
-      EventJoin: payload.hostId,
     };
 
     const event = await this.eventRepository.createEvent(createData);
