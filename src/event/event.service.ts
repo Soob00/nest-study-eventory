@@ -127,7 +127,10 @@ export class EventService {
     await this.eventRepository.leaveEvent(eventId, userId);
   }
 
-  async updateEvent(eventId: number, payload: UpdateEventPayload): Promise<void> {
+  async updateEvent(
+    eventId: number,
+    payload: UpdateEventPayload,
+  ): Promise<void> {
     const event = await this.eventRepository.findEventById(eventId);
 
     if (!event) {
