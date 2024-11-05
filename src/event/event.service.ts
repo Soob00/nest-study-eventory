@@ -16,6 +16,8 @@ import { get } from 'lodash';
 import { EventQuery } from './query/event-query';
 import { title } from 'process';
 import { string } from 'joi';
+import { UpdateEventPayload } from './payload/update-event.payload';
+import { UpdateEventData } from './type/update-event-data.type';
 
 @Injectable()
 export class EventService {
@@ -123,5 +125,35 @@ export class EventService {
     }
 
     await this.eventRepository.leaveEvent(eventId, userId);
+  }
+
+  async updateEvent(eventId: number, payload: UpdateEventPayload): Promise<void> {
+    const event = await this.eventRepository.findEventById(eventId);
+
+    if (!event) {
+      throw new NotFoundException('해당 이벤트를 찾을 수 없습니다.');
+    }
+
+    if (event.startTime > event.endTime) {
+      throw new BadRequestException(
+        '시작 시간이 종료 시간보다 늦을 수 없습니다.',
+      );
+    }
+
+    if (event.endTime > new Date()) {
+      throw new BadRequestException(
+        '이미 이벤트가 종료되어 이벤트를 변경할 수 없습니다.',
+      );
+    }
+
+    const updateData: UpdateEventData = {
+      title: payload.title,
+      description: payload.description,
+      categoryId: payload.categoryId,
+      city: payload.cityId,
+      startTime: payload.startTime,
+      endTime: payload.endTime,
+      maxPeople: payload.maxPeople,
+    };
   }
 }
