@@ -43,7 +43,7 @@ export class PatchEventPayload {
     description: '도시 ID',
     type: Number,
   })
-  cityId?: number|null;
+  cityId?: number | null;
 
   @IsOptional()
   @Type(() => Date)

@@ -150,7 +150,7 @@ export class EventRepository {
     });
   }
 
-  async patchupdateEvent( 
+  async patchupdateEvent(
     eventId: number,
     data: UpdateEventData,
   ): Promise<EventData> {
