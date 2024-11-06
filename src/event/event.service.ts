@@ -16,7 +16,8 @@ import { get } from 'lodash';
 import { EventQuery } from './query/event-query';
 import { title } from 'process';
 import { string } from 'joi';
-
+import { PatchEventPayload } from './payload/patch-event.payload';
+import { UpdateEventData } from './type/update-event-data.type';
 @Injectable()
 export class EventService {
   constructor(private readonly eventRepository: EventRepository) {}
@@ -124,4 +125,60 @@ export class EventService {
 
     await this.eventRepository.leaveEvent(eventId, userId);
   }
+
+  async patchupdateEvent(
+    eventId: number,payload: PatchEventPayload,
+  ): Promise<EventDto> {
+
+    // description은 null이어도 괜찮지 않을까?? 지만 create에서 필수로 했으니 필수로 받자
+    if (payload.title == null){
+      throw new BadRequestException('제목을 입력해주세요.');
+    }
+
+    if (payload.categoryId == null){
+      throw new BadRequestException('카테고리를 입력해주세요.');
+    }
+
+    if (payload.description == null){
+      throw new BadRequestException('설명을 입력해주세요.');
+    }
+
+    if (payload.cityId == null){
+      throw new BadRequestException('도시를 입력해주세요.');
+    }
+
+    if (payload.startTime == null){
+      throw new BadRequestException('시작 시간을 입력해주세요.');
+    }
+    
+    if (payload.endTime == null){
+      throw new BadRequestException('종료 시간을 입력해주세요.');
+    }
+    
+    if (payload.maxPeople == null){
+      throw new BadRequestException('최대인원을 입력해주세요.');  
+    }
+
+    const event = await this.eventRepository.findEventById(eventId);
+
+    if(!event){
+      throw new NotFoundException('해당 이벤트를 찾을 수 없습니다.');
+    }
+
+    const patchupdateData: UpdateEventData = {
+      title: payload.title,
+      description: payload.description,
+      categoryId: payload.categoryId,
+      cityId: payload.cityId,
+      startTime: payload.startTime,
+      endTime: payload.endTime,
+      maxPeople: payload.maxPeople,
+    };
+
+    const patchupdatedEvent = await this.eventRepository.patchupdateEvent(eventId, patchupdateData);
+
+    return EventDto.from(patchupdatedEvent);
+  }
+
+
 }
