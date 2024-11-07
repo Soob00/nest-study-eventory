@@ -52,7 +52,7 @@ export class PatchEventPayload {
     description: '시작 시간',
     type: Date,
   })
-  startTime?: Date;
+  startTime?: Date | null;
 
   @IsOptional()
   @Type(() => Date)
@@ -61,7 +61,7 @@ export class PatchEventPayload {
     description: '마감 시간',
     type: Date,
   })
-  endTime?: Date;
+  endTime?: Date | null;
 
   @IsOptional()
   @IsPositive()

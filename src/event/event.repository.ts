@@ -56,9 +56,6 @@ export class EventRepository {
           eventId,
           userId,
         },
-        user: {
-          deletedAt: null,
-        },
       },
     });
 
@@ -104,7 +101,8 @@ export class EventRepository {
 
   async joinEvent(eventId: number, userId: number): Promise<void> {
     await this.prisma.eventJoin.create({
-      data: { userId: userId, eventId: eventId },
+      data: { userId: userId,
+         eventId: eventId },
       select: {
         userId: true,
         eventId: true,
@@ -145,13 +143,14 @@ export class EventRepository {
 
   async leaveEvent(eventId: number, userId: number): Promise<void> {
     await this.prisma.eventJoin.delete({
-      where: {
-        eventId_userId: {
-          eventId: eventId,
-          userId: userId,
+        where: {
+          eventId_userId:{
+            eventId: eventId,
+            userId: userId,
+          }
         },
       },
-    });
+    );
   }
 
   async patchupdateEvent(
@@ -187,7 +186,7 @@ export class EventRepository {
 
   async deleteEvent(eventId: number): Promise<void> {
     await this.prisma.event.delete({
-      where: {
+      where:{
         id: eventId,
       },
     });

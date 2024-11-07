@@ -188,9 +188,20 @@ export class EventService {
     }
 
     // 이벤트 시작했으면 수정 불가
-    if (payload.startTime && new Date() > event.startTime) {
+    if (new Date() > event.startTime) {
       throw new ConflictException('이벤트가 이미 시작되어 수정할 수 없습니다.');
     }
+
+    // payload로 시작시간만 받는 경우 - 종료시간이 원래 시작시간보다 늦어야함
+    if (payload.startTime && !payload.endTime && payload.startTime > event.endTime) {
+      throw new BadRequestException('종료 시간이 시작시간보다 빠를 수 없습니다.');
+    }
+
+    // payload로 종료시간만 받는 경우 - 시작시간이 원래 종료시간보다 빨라야함
+    if (!payload.startTime && payload.endTime && payload.endTime < event.startTime) {
+      throw new BadRequestException('시작 시간을 종료시간보다 늦을 수 없습니다.');
+    }
+
 
     ///
 
