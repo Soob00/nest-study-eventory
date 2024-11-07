@@ -56,6 +56,9 @@ export class EventRepository {
           eventId,
           userId,
         },
+        user: {
+          deletedAt: null,
+        },
       },
     });
 
@@ -66,6 +69,7 @@ export class EventRepository {
     return this.prisma.user.findUnique({
       where: {
         id: userId,
+        deletedAt: null,
       },
     });
   }

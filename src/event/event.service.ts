@@ -173,7 +173,7 @@ export class EventService {
     // 시작시간은 종료시간보다 늦을 수 없음(null 아닌 경우만)
     if (
       payload.startTime &&
-      payload.endTime &&
+    payload.endTime &&
       payload.startTime > payload.endTime
     ) {
       throw new BadRequestException(
