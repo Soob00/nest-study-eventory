@@ -130,7 +130,6 @@ export class EventService {
     eventId: number,
     payload: PatchEventPayload,
   ): Promise<EventDto> {
-
     const event = await this.eventRepository.findEventById(eventId);
 
     if (!event) {
