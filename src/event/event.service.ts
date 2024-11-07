@@ -171,7 +171,9 @@ export class EventService {
     // 1. 시간 관련
     // 시작시간은 종료시간보다 늦을 수 없음(null 아닌 경우만)
     if (
-      payload.startTime && payload.endTime && payload.startTime > payload.endTime
+      payload.startTime &&
+      payload.endTime &&
+      payload.startTime > payload.endTime
     ) {
       throw new BadRequestException(
         '시작 시간이 종료 시간보다 늦을 수 없습니다.',
@@ -181,7 +183,8 @@ export class EventService {
     // 수정한 이벤트 시작시간이 현재 시간 전이면 모임 정보 수정 불가
     if (payload.startTime && new Date() > payload.startTime) {
       throw new BadRequestException(
-        '현재 시간보다 시작 시간이 늦어 이벤트를 수정할 수 없습니다.');
+        '현재 시간보다 시작 시간이 늦어 이벤트를 수정할 수 없습니다.',
+      );
     }
 
     // 이벤트 시작했으면 수정 불가
