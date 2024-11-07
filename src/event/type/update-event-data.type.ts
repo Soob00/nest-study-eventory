@@ -1,5 +1,4 @@
 export type UpdateEventData = {
-
   title?: string;
   description?: string;
   categoryId?: number;
@@ -7,5 +6,4 @@ export type UpdateEventData = {
   startTime?: Date;
   endTime?: Date;
   maxPeople?: number;
-
 };
