@@ -180,5 +180,15 @@ export class EventService {
     return EventDto.from(patchupdatedEvent);
   }
 
+  async deleteEvent(eventId: number): Promise<void> {
+    const event = await this.eventRepository.findEventById(eventId);
+
+    if (!event) {
+      throw new NotFoundException('해당 이벤트를 찾을 수 없습니다.');
+    }
+
+    await this.eventRepository.deleteEvent(eventId);
+  }
+
 
 }

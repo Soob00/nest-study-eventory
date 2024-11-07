@@ -5,6 +5,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   Param,
@@ -94,5 +95,14 @@ export class EventController {
     @Body() payload: PatchEventPayload,
   ): Promise<EventDto> {
     return this.eventService.patchupdateEvent(eventId, payload);
+  }
+
+  @Delete(':eventId')
+  @ApiOperation({ summary: '모임을 삭제합니다.' })
+  @ApiNoContentResponse()
+  async deleteEvent(
+    @Param('eventId', ParseIntPipe) eventId: number,
+  ): Promise<void> {
+    return this.eventService.deleteEvent(eventId);
   }
 }
