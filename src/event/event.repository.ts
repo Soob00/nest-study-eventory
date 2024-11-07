@@ -56,9 +56,9 @@ export class EventRepository {
           eventId,
           userId,
         },
-        user:{
+        user: {
           deletedAt: null,
-        }
+        },
       },
     });
 
