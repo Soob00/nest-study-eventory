@@ -171,9 +171,7 @@ export class EventService {
     // 1. 시간 관련
     // 시작시간은 종료시간보다 늦을 수 없음(null 아닌 경우만)
     if (
-      payload.startTime &&
-    payload.endTime &&
-      payload.startTime > payload.endTime
+      payload.startTime && payload.endTime && payload.startTime > payload.endTime
     ) {
       throw new BadRequestException(
         '시작 시간이 종료 시간보다 늦을 수 없습니다.',
@@ -183,13 +181,12 @@ export class EventService {
     // 수정한 이벤트 시작시간이 현재 시간 전이면 모임 정보 수정 불가
     if (payload.startTime && new Date() > payload.startTime) {
       throw new BadRequestException(
-        '이미 시작 시간이 지나 이벤트를 생성할 수 없습니다.',
-      );
+        '현재 시간보다 시작 시간이 늦어 이벤트를 수정할 수 없습니다.');
     }
 
     // 이벤트 시작했으면 수정 불가
     if (payload.startTime && new Date() > event.startTime) {
-      throw new ConflictException('이벤트가 시작되어 수정할 수 없습니다.');
+      throw new ConflictException('이벤트가 이미 시작되어 수정할 수 없습니다.');
     }
 
     ///
@@ -201,6 +198,7 @@ export class EventService {
 
     const countjoinedPeople =
       await this.eventRepository.CountJoinedPeople(eventId);
+
     if (payload.maxPeople && payload.maxPeople < countjoinedPeople) {
       throw new ConflictException('참가자 수가 최대인원보다 많습니다.');
     }
@@ -230,8 +228,8 @@ export class EventService {
       throw new NotFoundException('해당 이벤트를 찾을 수 없습니다.');
     }
 
-    if (new Date() > event.endTime) {
-      throw new ConflictException('이벤트가 종료되어 삭제할 수 없습니다.');
+    if (new Date() > event.startTime) {
+      throw new ConflictException('이벤트가 시작되어 삭제할 수 없습니다.');
     }
 
     await this.eventRepository.deleteEvent(eventId);
