@@ -130,14 +130,15 @@ export class EventService {
     eventId: number,
     payload: PatchEventPayload,
   ): Promise<EventDto> {
-    // description은 null이어도 괜찮지 않을까?? 지만 create에서 필수로 했으니 필수로 받자
-    
+
+    // 우선 event 존재하는지 확인
     const event = await this.eventRepository.findEventById(eventId);
 
     if (!event) {
       throw new NotFoundException('해당 이벤트를 찾을 수 없습니다.');
     }
 
+    // payload를 통해 들어온 값들이 null인지 확인
     if (payload.title === null) {
       throw new BadRequestException('제목을 입력해주세요.');
     }
@@ -166,6 +167,7 @@ export class EventService {
       throw new BadRequestException('최대인원을 입력해주세요.');
     }
 
+    // 기타 정보 확인
     // 시작시간이 종료시간보다 늦을 수 없음. 최대인원 관련, 시작시간 지났는지
 
     // 1. 시간 관련
@@ -219,6 +221,10 @@ export class EventService {
 
     if (!event) {
       throw new NotFoundException('해당 이벤트를 찾을 수 없습니다.');
+    }
+
+    if (new Date() > event.endTime) {
+      throw new ConflictException('이벤트가 종료되어 삭제할 수 없습니다.');
     }
 
     await this.eventRepository.deleteEvent(eventId);
