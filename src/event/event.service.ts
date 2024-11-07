@@ -214,7 +214,6 @@ export class EventService {
     return EventDto.from(patchupdatedEvent);
   }
 
-
   async deleteEvent(eventId: number): Promise<void> {
     const event = await this.eventRepository.findEventById(eventId);
 
@@ -224,5 +223,4 @@ export class EventService {
 
     await this.eventRepository.deleteEvent(eventId);
   }
-
 }
