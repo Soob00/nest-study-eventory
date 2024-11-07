@@ -131,38 +131,69 @@ export class EventService {
     payload: PatchEventPayload,
   ): Promise<EventDto> {
     // description은 null이어도 괜찮지 않을까?? 지만 create에서 필수로 했으니 필수로 받자
-    if (payload.title == null) {
-      throw new BadRequestException('제목을 입력해주세요.');
-    }
-
-    if (payload.categoryId == null) {
-      throw new BadRequestException('카테고리를 입력해주세요.');
-    }
-
-    if (payload.description == null) {
-      throw new BadRequestException('설명을 입력해주세요.');
-    }
-
-    if (payload.cityId == null) {
-      throw new BadRequestException('도시를 입력해주세요.');
-    }
-
-    if (payload.startTime == null) {
-      throw new BadRequestException('시작 시간을 입력해주세요.');
-    }
-
-    if (payload.endTime == null) {
-      throw new BadRequestException('종료 시간을 입력해주세요.');
-    }
-
-    if (payload.maxPeople == null) {
-      throw new BadRequestException('최대인원을 입력해주세요.');
-    }
-
+    
     const event = await this.eventRepository.findEventById(eventId);
 
     if (!event) {
       throw new NotFoundException('해당 이벤트를 찾을 수 없습니다.');
+    }
+
+    if (payload.title === null) {
+      throw new BadRequestException('제목을 입력해주세요.');
+    }
+    
+    if (payload.categoryId === null) {
+      throw new BadRequestException('카테고리를 입력해주세요.');
+    }
+
+    if (payload.description === null) {
+      throw new BadRequestException('설명을 입력해주세요.');
+    }
+
+    if (payload.cityId === null) {
+      throw new BadRequestException('도시를 입력해주세요.');
+    }
+
+    if (payload.startTime === null) {
+      throw new BadRequestException('시작 시간을 입력해주세요.');
+    }
+
+    if (payload.endTime === null) {
+      throw new BadRequestException('종료 시간을 입력해주세요.');
+    }
+
+    if (payload.maxPeople === null) {
+      throw new BadRequestException('최대인원을 입력해주세요.');
+    }
+
+    // 시작시간이 종료시간보다 늦을 수 없음. 최대인원 관련, 시작시간 지났는지
+
+    // 1. 시간 관련
+    // 시작시간은 종료시간보다 늦을 수 없음(null 아닌 경우만)
+    if (payload.startTime && payload.endTime && payload.startTime > payload.endTime) {
+      throw new BadRequestException('시작 시간이 종료 시간보다 늦을 수 없습니다.');
+    }
+
+    // 수정한 이벤트 시작시간이 현재 시간 전이면 모임 정보 수정 불가
+    if (payload.startTime && new Date() > payload.startTime) {
+      throw new BadRequestException('이미 시작 시간이 지나 이벤트를 생성할 수 없습니다.');
+    }
+
+    // 이벤트 시작했으면 수정 불가
+    if (payload.startTime && new Date() > event.startTime) {
+      throw new ConflictException('이벤트가 시작되어 수정할 수 없습니다.');
+    }
+
+    ///
+
+    // 2. 최대인원 관련
+    if (payload.maxPeople && payload.maxPeople < 1) {
+      throw new BadRequestException('최대인원은 1명 이상이어야 합니다.');
+    }
+
+    const countjoinedPeople = await this.eventRepository.CountJoinedPeople(eventId);
+    if (payload.maxPeople && payload.maxPeople < countjoinedPeople) {
+      throw new ConflictException('참가자 수가 최대인원보다 많습니다.');
     }
 
     const patchupdateData: UpdateEventData = {
