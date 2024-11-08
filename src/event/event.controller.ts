@@ -36,6 +36,7 @@ export class EventController {
 
   // 이벤트 생성
   @Post()
+  @HttpCode(201)
   @ApiCreatedResponse()
   @ApiOperation({ summary: '이벤트를 생성합니다.' })
   @ApiOkResponse({ type: EventDto })
