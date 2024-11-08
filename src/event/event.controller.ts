@@ -5,10 +5,12 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
   Query,
 } from '@nestjs/common';
@@ -25,6 +27,7 @@ import { CreateEventPayload } from './payload/create-event.payload';
 import { EventJoinOutPayload } from './payload/event-join-out.payload';
 import { EventQuery } from './query/event-query';
 import { EventData } from './type/event-data.type';
+import { PatchEventPayload } from './payload/patch-event.payload';
 
 @Controller('events')
 @ApiTags('Event API')
@@ -33,6 +36,7 @@ export class EventController {
 
   // 이벤트 생성
   @Post()
+  @HttpCode(201)
   @ApiCreatedResponse()
   @ApiOperation({ summary: '이벤트를 생성합니다.' })
   @ApiOkResponse({ type: EventDto })
@@ -82,5 +86,25 @@ export class EventController {
     @Body() payload: EventJoinOutPayload,
   ): Promise<void> {
     return this.eventService.leaveEvent(eventId, payload.userId);
+  }
+
+  @Patch(':eventId')
+  @ApiOperation({ summary: '모임 정보를 수정합니다.' })
+  @ApiOkResponse({ type: EventDto })
+  async PatchupdateEvent(
+    @Param('eventId', ParseIntPipe) eventId: number,
+    @Body() payload: PatchEventPayload,
+  ): Promise<EventDto> {
+    return this.eventService.patchupdateEvent(eventId, payload);
+  }
+
+  @Delete(':eventId')
+  @HttpCode(204)
+  @ApiOperation({ summary: '모임을 삭제합니다.' })
+  @ApiNoContentResponse()
+  async deleteEvent(
+    @Param('eventId', ParseIntPipe) eventId: number,
+  ): Promise<void> {
+    return this.eventService.deleteEvent(eventId);
   }
 }
