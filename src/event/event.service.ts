@@ -198,9 +198,7 @@ export class EventService {
       !payload.endTime &&
       payload.startTime > event.endTime
     ) {
-      throw new ConflictException(
-        '종료 시간이 시작시간보다 빠를 수 없습니다.',
-      );
+      throw new ConflictException('종료 시간이 시작시간보다 빠를 수 없습니다.');
     }
 
     // payload로 종료시간만 받는 경우 - 시작시간이 원래 종료시간보다 빨라야함
@@ -209,9 +207,7 @@ export class EventService {
       payload.endTime &&
       payload.endTime < event.startTime
     ) {
-      throw new ConflictException(
-        '시작 시간을 종료시간보다 늦을 수 없습니다.',
-      );
+      throw new ConflictException('시작 시간을 종료시간보다 늦을 수 없습니다.');
     }
 
     ///
