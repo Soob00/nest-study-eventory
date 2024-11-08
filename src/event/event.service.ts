@@ -86,10 +86,10 @@ export class EventService {
       throw new ConflictException('이미 이벤트가 시작되어 참여할 수 없습니다.');
     }
 
-    const countjoinedPeople =
+    const NumOfJoinedPeople =
       await this.eventRepository.CountJoinedPeople(eventId);
 
-    if (event.maxPeople === countjoinedPeople) {
+    if (event.maxPeople === NumOfJoinedPeople) {
       throw new ConflictException('모임인원이 가득 차서 참여할 수 없습니다.');
     }
 
@@ -104,7 +104,7 @@ export class EventService {
 
   // post(out)을 위한 것.
   async leaveEvent(eventId: number, userId: number): Promise<void> {
-    const isUserJoinedEvent = await this.eventRepository.isUserJoinedEvent(
+    const UserJoinedEvent = await this.eventRepository.isUserJoinedEvent(
       userId,
       eventId,
     );
@@ -115,7 +115,7 @@ export class EventService {
       throw new ConflictException('이벤트의 호스트는 탈퇴할 수 없습니다.');
     }
 
-    if (!isUserJoinedEvent) {
+    if (!UserJoinedEvent) {
       throw new ConflictException('이벤트에 참가하지 않았습니다.');
     }
 
@@ -198,7 +198,7 @@ export class EventService {
       !payload.endTime &&
       payload.startTime > event.endTime
     ) {
-      throw new BadRequestException(
+      throw new ConflictException(
         '종료 시간이 시작시간보다 빠를 수 없습니다.',
       );
     }
@@ -209,7 +209,7 @@ export class EventService {
       payload.endTime &&
       payload.endTime < event.startTime
     ) {
-      throw new BadRequestException(
+      throw new ConflictException(
         '시작 시간을 종료시간보다 늦을 수 없습니다.',
       );
     }
@@ -217,14 +217,10 @@ export class EventService {
     ///
 
     // 2. 최대인원 관련
-    if (payload.maxPeople && payload.maxPeople < 1) {
-      throw new BadRequestException('최대인원은 1명 이상이어야 합니다.');
-    }
-
-    const countjoinedPeople =
+    const NumOfJoinedPeople =
       await this.eventRepository.CountJoinedPeople(eventId);
 
-    if (payload.maxPeople && payload.maxPeople < countjoinedPeople) {
+    if (payload.maxPeople && payload.maxPeople < NumOfJoinedPeople) {
       throw new ConflictException('참가자 수가 최대인원보다 많습니다.');
     }
 

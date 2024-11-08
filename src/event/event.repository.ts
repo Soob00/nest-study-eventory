@@ -113,13 +113,13 @@ export class EventRepository {
   }
 
   async CountJoinedPeople(eventId: number): Promise<number> {
-    const countjoinedPeople = await this.prisma.eventJoin.count({
+    const NumOfJoinedPeople = await this.prisma.eventJoin.count({
       where: {
         id: eventId,
       },
     });
 
-    return countjoinedPeople;
+    return NumOfJoinedPeople;
   }
 
   async getEvents(query: EventQuery): Promise<EventData[]> {

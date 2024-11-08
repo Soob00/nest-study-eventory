@@ -98,6 +98,7 @@ export class EventController {
   }
 
   @Delete(':eventId')
+  @HttpCode(204)
   @ApiOperation({ summary: '모임을 삭제합니다.' })
   @ApiNoContentResponse()
   async deleteEvent(
